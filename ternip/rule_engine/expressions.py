@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+# predef re's for replacing
+ORDINAL_WORDS = r'(tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|twenty-first|twenty-second|twenty-third|twenty-fourth|twenty-fifth|twenty-sixth|twenty-seventh|twenty-eighth|twenty-ninth|thirtieth|thirty-first|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)'
+ORDINAL_NUMS = r'([23]?1-?st|11-?th|[23]?2-?nd|12-?th|[12]?3-?rd|13-?th|[12]?[4-90]-?th|30-?th)'
+DAYS = r'(monday|tuesday|wednesday|thursday|friday|saturday|sunday)'
+MONTHS = r'(january|february|march|april|may|june|july|august|september|october|november|december)'
+MONTH_ABBRS = r'(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)\.?'
+RELATIVE_DAYS = r'(today|yesterday|tomorrow|tonight|tonite)'
+DAY_HOLIDAYS = r'(election|memorial|C?Hanukk?ah|Rosh|Kippur|tet|diwali|halloween)'
+NTH_DOW_HOLIDAYS = r'(mlk|king|president|canberra|mother|father|labor|columbus|thanksgiving)'
+FIXED_HOLIDAYS = r'(<new~.+><year~.+>|<inauguration~.+>|<valentine~.+>|<ground~.+>|<candlemas~.+>|<patrick~.+>|<fool~.+>|<(saint|st\.)~.+><george~.+>|<walpurgisnacht~.+>|<may~.+><day~.+>|<beltane~.+>|<cinco~.+>|<flag~.+>|<baptiste~.+>|<canada~.+>|<dominion~.+>|<independence~.+>|<bastille~.+>|<halloween~.+>|<allhallow~.+>|<all~.+><(saint|soul)s~.+>|<day~.+><of~.+><the~.+><dead~.+>|<fawkes~.+>|<veteran~.+>|<christmas~.+>|<xmas~.+>|<boxing~.+>)'
+LUNAR_HOLIDAYS = r'(<easter~.+>|<palm~.+><sunday~.+>|<good~.+><friday~.+>|<ash~.+><wednesday~.+>|<shrove~.+><tuesday~.+>|<mardis~.+><gras~.+>)'
+NUMBER_TERM = r'(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|trillion|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|thirtieth|fortieth|fiftieth|sixtieth|seventieth|eightieth|ninetieth|hundreth|thousandth|millionth|billionth|trillionth)'
+ORD_UNIT_NUMS = r'(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)'
+ORD_OTHER_NUMS = r'(tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|seventeenth|eighteenth|nineteenth|twentieth|thirtieth|fortieth|fiftieth|sixtieth|seventieth|eightieth|ninetieth|hundreth|thousandth|millionth|billionth|trillionth)'
+HIGHER_NUMS = r'(hundred|thousand|million|billion|trillion)'
+UNIT_NUMS = r'(one|two|three|four|five|six|seven|eight|nine)'
+UNIQUE_NUMS = r'(ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)'
+TENS_NUMS = r'(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)'
+UNITS = r'(second|minute|hour|day|month|year|week|fortnight|decade|centur(y|ie)|milleni(um|a))'

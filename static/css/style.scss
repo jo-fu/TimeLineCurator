@@ -1,0 +1,365 @@
+
+$leftBoxSize:25%;
+$colorDate:#79BD8F;
+$colorDateSelected:#a3ffc0;
+$colorNoDate:#ccc;
+$btnsSize:25px;
+
+$shadow:2px 2px 0px #ccc;
+$noshadow:0px 0px 0px #ccc;
+$activeBorder: 2px inset #999;
+
+$doc-1: rgb(111,111,111);
+$doc0: rgb(55,126,184);
+$doc1: rgb(77,175,74);
+$doc2: rgb(152,78,163);
+$doc3: rgb(255,127,0);
+$doc4: rgb(228,26,28);
+$doc5: rgb(166,86,40);
+
+
+$highlightColor:rgb(255, 97, 56);
+$highlightColorHalf:rgba(255, 97, 56, 0.4);
+
+@mixin calc($property, $expression) { 
+  #{$property}: -webkit-calc(#{$expression}); 
+  #{$property}: -moz-calc(#{$expression}); 
+  #{$property}: calc(#{$expression}); 
+} 
+@mixin shadow() { 
+  -moz-box-shadow:$shadow;
+  -webkit-box-shadow:$shadow;
+  box-shadow:$shadow; 
+}
+@mixin noshadow() { 
+  -moz-box-shadow:$noshadow;
+  -webkit-box-shadow:$noshadow;
+  box-shadow:$noshadow; 
+} 
+
+html, body{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color:#fff; height:100%; margin:0;
+}
+// Basic Layout
+#topBox{ position:relative; @include calc(height, "50% - 20px"); width: 100%; }
+
+.bgColor_0 { background-color: $doc0; }
+.bgColor_1 { background-color: $doc1; }
+.bgColor_2 { background-color: $doc2; }
+.bgColor_3 { background-color: $doc3; }
+.bgColor_4 { background-color: $doc4; }
+.bgColor_5 { background-color: $doc5; }
+
+#descriptionBox{ height:19px; background-color:#eee; line-height:15px; border-top: 1px solid #999;
+  table{ width:100%;}
+  td{ text-align:center; font-size:12px; color:#666; border-right:1px solid #999; }
+  td:nth-child(1){ width:30%}
+  td:nth-child(2){ width:30%}
+  td:nth-child(3){ width:40%; border-width:0px; }
+}
+
+#bottomBox{ position:relative; height: 50%; width: 100%; background-color:#fff; border-top: 1px solid #999; box-sizing: border-box;
+
+
+  #leftBox{ @include calc(height, "100% - 18px"); width:30%; float:left; overflow-y: auto; border-right: 1px solid #999; box-sizing: border-box; position:relative; }
+  #centerBox{ @include calc(height, "100% - 18px"); width:30%; float:left; overflow-y: auto; overflow-x: hidden; border-right: 1px solid #999; box-sizing: border-box; }
+  #rightBox{ height:100%; width: 40%; float:left; position:relative; overflow-y: auto; }
+  .statusBox{ font-size:0.7em; position:fixed; background-color:#fff; bottom:0px; width:30%; left:30%; padding:0 5px;  box-sizing: border-box; box-shadow:0px -1px 2px #999;}
+  }
+
+#topBox{
+  #tlc{ position:absolute; left:10px; top:0px; font-size:20px; font-weight:lighter; color:#999; margin:10px; }
+  #vagueDatesArea{ position:absolute; right:0px; top:0px; height:23px; width:auto;
+    h1{ font-size:0.7em; margin: 10px 10px 0 0; font-weight:normal; text-align:right; }
+   }
+}
+
+#leftBox{
+
+  #tablehead{ font-size:0.8em; line-height:25px; width:100%; height:25px; padding-left:10px; position:fixed; background-color:#fff; border-bottom:2px solid #333; width:30%; z-index:1; box-shadow:0px 1px 2px #999; }
+  
+  #listData{ position:relative; @include calc(height, "100% - 30px"); top:30px; overflow-y:auto;
+    table{ padding:15px; width:100%; border-collapse:collapse;
+      tr{ border-bottom: 1px solid #ccc !important; }
+      tr:hover{ color:darken( $highlightColor, 35% ); }
+      .highlighted:hover{ color:#fff; }
+      td{ padding: 2px 5px; position:relative; }
+      td:nth-child(1){ width:50px;}
+      td:nth-child(2){ min-width:100px; font-weight:bold; font-size:14px; }
+      td:nth-child(3){ line-height:1em; font-size:12px; }
+      .deleted{ text-decoration:line-through; background-color:#ccc; font-size:0.7em; }
+      .deleted td:nth-child(1){ opacity:0.2 }
+      .listEl{
+        .bgColor_-1 { background-color: $doc-1; border-color:transparent $doc-1 transparent $doc-1 }
+        .bgColor_0 { background-color: $doc0; border-color:transparent $doc0 transparent $doc0 }
+        .bgColor_1 { background-color: $doc1; border-color:transparent $doc1 transparent $doc1 }
+        .bgColor_2 { background-color: $doc2; border-color:transparent $doc2 transparent $doc2 }
+        .bgColor_3 { background-color: $doc3; border-color:transparent $doc3 transparent $doc3 }
+        .bgColor_4 { background-color: $doc4; border-color:transparent $doc4 transparent $doc4 }
+        .bgColor_5 { background-color: $doc5; border-color:transparent $doc5 transparent $doc5 }
+        .symbol_date{ width:15px; height:15px; border-radius:10px; margin:-7px 14px; position:absolute;
+          p{ text-align:center; color: #fff; font-size:12px; margin:0; padding:0; }
+          }
+        .symbol_duration{ background-color:transparent; width:0; height:0; border-width:10px 9px; border-style:solid; margin:-10px 13px; position:absolute;
+          p{ margin:-9px 1px; color:#fff; font-size:12px; }
+          }
+        .symbol_neither{ width:12px; height:12px; margin:-6px 16px; position:absolute;
+          p{ text-align:center; color: #fff; font-size:12px; margin:-2px; padding:0; }
+        }
+        .untouched{ opacity: 0.6; stroke-color:#666; stroke-width:3px; }
+      }
+    }
+  }
+}
+// Center Box
+#centerBox{
+
+  #startHere{ background-image:url(../img/start.png); height:114px; width:220px; margin:40px 0 0 5px; background-repeat:no-repeat; }
+  #addDocTooltip{ margin-left: 34px; z-index:1 }
+
+  #docSwitcher{ overflow:hidden; width:30%; height:25px; position:fixed; background-color:#fff; border-bottom:2px solid #333; z-index:1; box-shadow:0px 1px 2px #999;
+    
+    ul{ margin:0; padding:0; position:absolute; left:30px; @include calc(width, "100% - 30px");}
+
+    .docBtn{ position:relative; cursor:pointer; color:#fff; font-weight:bold; font-size:12px; height:25px; line-height:25px; margin:0 0 2px 0px; padding:0 10px; overflow:hidden; }
+    .docBtn:hover{ opacity:0.9; }
+    #addDoc{ float:left; width:25px; height:25px; cursor:pointer; margin:0 2px; }
+    .doctitle{ @include calc(width, "100% - 30px"); }
+    .doctools{ position:absolute; width:25px; right:0; top:0; height:25px; text-align:right; font-size:0.7em; font-weight:normal; padding:6px 2px 2px 0; background-color:#fff; color:#333}
+    .inactive{ font-size: 0.7em; background-color: #999 !important; color:#fff !important; font-weight:normal; font-style:italic; }
+    .inactive .hideDoc{ background-image: url("../img/reload.png") !important; }
+    .docBtn:active, .activeBtn{ display:block; }
+    .hideDoc{ width:13px; height:13px; position:absolute; top:0; right:0; background-image:url("../img/delete.png"); background-size:100%;}
+  }
+  #docText{ padding:40px 15px 15px;
+    
+    .txtData{ display:none;
+      .tx{ color: $highlightColor; }
+    }
+    .activetab{ display:block; }
+  }
+}
+
+#rightBox{ 
+
+ul{ list-style-type: none; padding: 0px; margin: 0px; cursor:pointer; }
+  li{ background-color: #fff; margin: 2px 0; padding:2px 10px; @include shadow(); }
+  li:hover{ background-color:#efefef }
+  li:active{ @include noshadow(); margin: 4px 0 0 2px; }
+
+  #toolBox{ position:absolute; right:0; top:0; height:100%; width: ($btnsSize+10px);
+    #loadData{ background-image:url(../img/loadData.png); }
+    #loadDataOptions{ position:absolute; top:94px; z-index:1; right:37px; width:175px; }
+    #downloadDataOptions{ position:absolute; top:64px; z-index:1; right:37px; width:175px; }
+    #exportDataOptions{ position:absolute; top:32px; z-index:1; right:37px; width:175px; }
+    #saveState{ background-image:url(../img/saveState.png); }
+    #exportState{ background-image:url(../img/exportJson.png);
+      a{ text-decoration:none; color:#000; }
+      li{ }
+      p{ padding:0 0 8px 0; line-height:12px; font-size:0.65em; color:#666; margin:0; }
+    }
+    #gohome{ background-image:url(../img/home.png); }
+    
+    #mergeDates{ background-image:url(../img/merge.png); }
+    #deleteAll{ background-image:url(../img/deleteAll.png); }
+  }
+  .display{ height:100%; overflow-y:auto; box-sizing: border-box; @include calc(width, "100% - 35px"); padding:10px;
+    #tracks{ margin-top:15px; 
+      .track{ border-width:1px 1px 4px; border-style:solid; border-color:#ddd; @include shadow(); margin:4px 20px 4px 0; width:175px; padding:2px 10px 2px; font-weight:bold; font-size:12px; }
+      input{ margin:5px 20px 4px 2px; width:180px; }
+      .trackColor_0{ border-bottom-color:$doc0; color:$doc0 }
+      .trackColor_1{ border-bottom-color:$doc1; color:$doc1 }
+      .trackColor_2{ border-bottom-color:$doc2; color:$doc2 }
+      .trackColor_3{ border-bottom-color:$doc3; color:$doc3 }
+      .trackColor_4{ border-bottom-color:$doc4; color:$doc4 }
+      .trackColor_5{ border-bottom-color:$doc5; color:$doc5 }
+    }
+    .mediaBtn input{ @include calc(width, "100% - 25px"); margin: 12px;}
+    .media { margin:10px; padding:5px;
+      p{ font-size:0.8em; margin:0 }
+
+    }
+    #addMedia{ width: 80px; height: $btnsSize + 10;  margin: 20px 0 0 0px; 
+      #addMediaBtn{ border:1px solid #efefef; background-color:#fff; cursor:pointer; font-weight: bold; font-size: 0.7em; padding: 3px 8px; color: #333; 
+      @include shadow(); float:left; }
+      #addMediaBtn:active{ @include noshadow(); }
+      #mediaIndicator{ width:$btnsSize; height:$btnsSize; background-image:url(../img/hasMedia.png); margin-top:-24px; margin-left:100px; }
+      .hasMedia{ background-position: right; }
+    }
+    #addMediaBox{ padding:1px 10px; background-color:#efefef; }
+    #changeTrack{ height:35px; width: auto; }
+    #changeTrackBtn{ font-weight: bold; font-size: 0.7em; padding: 4px 8px; margin-right:10px; float:left; }
+   
+    #tool_delete{ float:left; background-image:url(../img/delete.png); }
+    #prevDate, #nextDate{ float:left; background-image:url(../img/arrows.png) }
+    #prevDate{ background-position:left; }
+    #nextDate{ background-position:right; }
+  }
+
+}
+
+// BUTTON STYLE
+.ctl{ padding:1px 10px; border:1px solid #ccc; background-color:#fff; cursor:pointer; @include shadow(); background-color:#fafafa; }
+.ctlBtns{ width:$btnsSize; height:$btnsSize; margin:4px 8px 0 0; border:1px solid #efefef; background-repeat:no-repeat;
+    background-color:#fff; background-position:center; cursor:pointer;
+    @include shadow(); }
+.ctlBtns:active, .ctl:active,.home{ @include noshadow(); margin: 4px 0px 4px 2px; background-color:#eee; }
+
+#tooltipbox,#addDocTooltip{ display:none; background-color:#333; color:#fff; position:absolute; padding:2px 5px; font-size:0.8em; }
+#tooltipbox{ right:35px;}
+#addDoc, #addDate{ background-image:url(../img/add.png); }
+
+
+// Left Box (Text or List display)
+
+  #view_switch{ width:100%; height:20px; position:absolute; z-index:10; text-align:center; }
+ 
+  .listview{ overflow-y:auto; position:absolute; background-color: #fff; height:100%; width:100%; padding:50px 20px 20px; border-right:1px solid #333; box-sizing: border-box; }
+  
+
+
+  .highlighted{ background-color:#333; color:#fff; }
+  .activeTx{ color: $highlightColor; line-height:22px; font-size:1.5em; font-weight:bold; }
+  .timex{ cursor:pointer; }
+  
+  #listData{
+    .listEl{ cursor:pointer; }
+    .docColor_-1 { color: $doc-1; }
+    .docColor_0 { color: $doc0; }
+    .docColor_1 { color: $doc1; }
+    .docColor_2 { color: $doc2; }
+    .docColor_3 { color: $doc3; }
+    .docColor_4 { color: $doc4; }
+    .docColor_5 { color: $doc5; }
+    ul > li > span { color: #000; }
+  }
+
+
+
+  
+  //#addDoc{ background-image:url(../img/addDoc.png); }
+  #selectBox{ position:absolute; top:40px; left:11px; z-index:1; }
+
+  
+  //#addDate{ background-image:url(../img/add.png); }
+ 
+  
+
+
+  h1, .datetitle{ font-size: 18px; }
+  h2{ font-size: 15px; color:#333; }
+
+  .hltx{ color: #fff; background-color:#333; }
+  p, .content{ font-size: 12px; font-weight:normal; padding:2px 5px; margin:0; }
+  .label{ font-size:0.8em; color:#999; font-weight:bold; }
+  input{ font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+
+  .addDimension{ padding: 7px 0 0; cursor:pointer; color:#999; background-position: center top; vertical-align:bottom;
+    background-image:url(../img/editAdd.png); background-repeat:no-repeat; font-size:8px; }
+  #displayDate input{ font-size: 18px; }
+  
+  .changeUnit{ background-image:url(../img/dateToDur.png); margin:2px 5px; padding:1px 13px; }
+  .durtodate{ background-image:url(../img/durToDate.png); margin:2px 5px; padding:1px 13px; }
+  #check{ background-image:url(../img/check.png); margin:2px 5px; padding:1px 13px; }
+  #dateEditMode{ }
+  #displaySubtitle{
+    input{ font-size: 14px; margin: 1px 0 2px 0; }
+    div, textarea{ font-size:18px; margin: 0 0 5px; @include calc(width, "100% - 100px"); }
+  }
+
+  #recoverElement{ position:absolute; text-align:left; bottom:10px; left:10px; font-size:10px; }
+
+.todaytag{ font-size:10px; fill:#aaa; font-style:italic; }
+.refline{ shape-rendering: crispEdges; stroke: #ccc; stroke-width:1px; }
+.timelineItem{
+    -moz-transition: all 300ms ease-in;
+    -webkit-transition: all 300ms ease-in;
+    -o-transition: all 300ms ease-in;
+    transition: all 300ms ease-in;
+    cursor: pointer;
+    }
+
+.selected{ stroke: #333; stroke-width:3px; }
+.selectedSec{ stroke: #666; stroke-width:2px;  }
+
+.datelabel{ display: none; text-align: center; }
+.visible{ display: block; }
+
+.chooseTrack, .changeTrack{ float:left; margin:0 5px 2px 3px; padding: 2px 9px; font-size: 0.8em; font-weight:bold; color:#fff; @include shadow(); }
+.chosen, .changeTrack:active, .chooseTrack:active{
+  margin:1px 3px 0 5px; outline:2px solid #efefef; @include noshadow(); border:$activeBorder; padding: 0px 7px;
+}
+
+
+   
+
+#fileinfo{ position:absolute; right:10px; top:10px; }
+
+
+// D3 Timeline Styles
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 10px;
+  fill:#000;
+}
+#timeline{ overflow-x:auto; height:100%;
+  .timeline-label { font-family: sans-serif; font-size: 32px; }
+  .extent{ fill: none; stroke: #999; stroke-width: 1px; stroke-dasharray: 5 }
+}
+
+#timeline2 .axis {
+  transform: translate(0px,30px);
+  -ms-transform: translate(0px,30px); /* IE 9 */
+  -webkit-transform: translate(0px,30px); /* Safari and Chrome */
+  -o-transform: translate(0px,30px); /* Opera */
+  -moz-transform: translate(0px,30px); /* Firefox */
+}
+
+.coloredDiv {
+  height:20px; width:20px; float:left;
+}
+
+.nouserselect{
+  -moz-user-select:-moz-none;
+  -moz-user-select:none;
+  -webkit-user-select:none;
+  -ms-user-select:none;
+  user-select:none
+   }
+
+.nodisplay{ display:none; }
+.notSelectable{ color:#ccc; }
+.notSelectable:hover{ background-color:#fff !important; }
+
+#inputOverlay{ display:none; position:absolute;top:0; right:0; bottom:0; left:0; background-color:rgba(255,255,255,0.9); z-index:11; padding:20px;
+  #closeInput{ position:absolute; top:0px; right:0; height:50px; width:50px; background-image:url(../img/closeInput.png); background-repeat:no-repeat; background-position:center; cursor:pointer;}
+  #inputContainer{ width:100%; margin: 0 auto; height:100%;
+    #insertText{ background-color:#efefef; padding:20px; margin:0 0 30px 0; @include calc(height, "100% - 140px");}
+    #insertFile{ background-color:#efefef; text-align:center; height:55px; padding:5px; }
+    textarea{ width:100%; min-height:100px; @include calc(height , "100% - 190px"); resize: none; }
+  }
+  h1{ font-size:20px; margin:0 0 15px 0; }
+  .optional{ color:#666; font-style:italic; font-size:0.8em; }
+  
+  .btn{ margin:0 auto; border:1px solid #efefef; background-color:#fff; cursor:pointer; width: 50px; text-align: center; height: 30px; line-height:30px;
+    @include shadow(); }
+  .btn:active{ @include noshadow(); margin: 2px 0px 0px 2px; }
+}
+
+.loading{ display:none; position:absolute;top:0; right:0; bottom:0; left:0; background-color:rgba(255,255,255,0.7); z-index:12;
+    img{ width:80px; height:85px; position:absolute; top:50%; margin-top:-42px; left:50%; margin-left:-40px; }
+  }
+#saved{ display:none; position:fixed; bottom:25px; right:0; color:#999; font-size:10px; padding:3px 5px 3px 25px; font-style:italic; background-image:url(../img/check.png); background-repeat:no-repeat; background-position:left;}
+#guide{ position:fixed; bottom:0; right: 0; padding: 5px; }
+#guide a{ text-decoration: none; font-weight:bold; color:#666; font-size:0.8em; }
+
+
+.help{ cursor:pointer; border: 1px solid #999; color:#999; font-size:10px; font-weight:bold; margin:0px; border-radius:50%; padding:1px 7px; @include shadow(); text-align:center; }
+.help:active{  @include noshadow(); margin:2px; }

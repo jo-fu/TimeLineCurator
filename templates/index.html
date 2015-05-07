@@ -1,0 +1,458 @@
+<!doctype html>
+<html ng-app="tlApp">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
+
+
+  <script src="{{ url_for('static', filename='js/lib/jquery-latest.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/lib/d3.min.js')}}" charset="utf-8"></script>
+  <script src="{{ url_for('static', filename='js/lib/d3-timeline.js')}}" charset="utf-8"></script>
+
+  <script src="{{ url_for('static', filename='js/lib/angular.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/dataWrangling.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/domScript.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/setupTLels.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/downloadFctns.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/angularScript.js')}}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='js/lib/jszip.min.js')}}"></script>
+  
+  <title>TimeLineCurator v0.3</title>
+
+</head>
+
+
+
+<body ng-controller="MainCtrl">
+  {% raw %}
+
+  <!-- topBox: Timeline JS -->
+  <div id="topBox">
+    <div id="vagueDatesArea"><h1>Vague dates</h1></div>
+    <div id="timeline">
+        <p style="text-align:center;"><i>Please select a document or add dates manually.</i></p>
+        
+    </div>
+    <!-- Add date + Arrow buttons -->  
+    <h1 id="tlc"><b>TimeLineCurator</b> v0.3</h1>
+    
+
+  </div>
+
+
+<div id="descriptionBox">
+  <table><tr>
+  <td>List View</td>
+  <td>Document View</td>
+  <td>Control Panel</td>
+  </tr></table>
+</div>
+
+ 
+ <!-- bottomBox: ListView / TextView / ControlPanel -->
+  <div id="bottomBox">
+ 
+
+<!-- leftBox: ListView -->
+<div id="leftBox">
+
+<!-- List Viewer -->
+      <div id="tablehead">
+          <!--table><tr>
+            <td-->
+
+              Sort list by:
+              <select
+                ng-model="sortval"
+                ng-change="orderByVal=sortval"
+                ng-options="item.val as item.title for item in sortBy"
+                ng-init="sortval=sortBy[0].val">
+              </select>
+              <span style="cursor:pointer;" ng-click="orderReverse=!orderReverse">
+                <span ng-if="orderReverse">&#9650;</span>
+                <span ng-if="!orderReverse">&#9660;</span>
+                </span>
+
+              
+             
+        </div>
+
+      <div id="listData">
+          <table>
+          <tr ng-repeat="tx in timexes | orderBy: orderByVal track by tx.id" class="listEl doc_{{tx.docNr}}" ng-click="clickList(tx)" id="listEl_{{tx.id}}" ng-class="{ deleted: !tx.visible }">
+            <td><span class="bgColor_{{ tx.trackNr }} symbol_{{ tx.typ }}" ng-class="{ untouched: !tx.touched }">
+              <p ng-if="tx.touched"> &#10003; </p>
+            </span></td>
+            <td>{{ tx.title }}</td>
+            <td>{{ tx.sub }}</td>
+          </tr>
+        </table>
+    </div>
+<div class="statusBox" style="left:0;"><b>Events: {{ countTxs("total","event") }}</b>, vague expressions: {{ countTxs("total","vague") }}</div>
+</div>
+
+
+<!-- centerBox: TextView -->
+<div id="centerBox">
+
+    <div id="docSwitcher">
+      
+      <div id="addDoc" class="" title="Add a new document" onclick="openInput()"></div>
+
+      <ul id="docList">
+        <li ng-repeat="file in fileNames track by $index" ng-click="switchView( $index )" id="button_{{ $index }}" class="docBtn docBtn_{{ $index }}" ng-class="{ activeBtn: $index == docNr }" style="background-color : rgb( {{ colorDate[file.trackNr] }} )">
+          <div class="doctitle"> {{ file.title }} </div>
+          <div class="doctools"> 
+            <b>{{ $index+1 }}</b>/{{ fileNames.length }}
+            <div class="hideDoc" id="hideDoc_{{$index}}" ng-click="hideDoc( $index )"></div>
+          </div>
+          
+        </li>
+      </ul>
+      
+      
+      <!--div id="button_list" class="docBtn" ng-click="switchView( 'list' )" style="background-color:#efefef;">List View</div-->
+    </div>
+    <div ng-hide="singleSents.length" id="startHere"></div>
+    <div id="addDocTooltip" class="tt">Add a new document</div>
+
+    <div id="docText">
+      
+      <div id="txtData_{{$index}}" ng-repeat="doc in singleSents" class="txtData" ng-class="{ activetab: $index == docNr}">
+        
+        <span ng-repeat="sent in doc">
+          <!-- For sentences WITH Timexes -->
+          <span ng-if="sent.tx=='Tx'" id="timeSent_{{ sent.sentNr }}" class="timex" ng-click="clickingSent(sent.sentNr)" ng-bind-html="sent.sent"></span>
+          <!-- For sentences WITHOUT Timexes -->
+          <span ng-if="sent.tx=='NoTx'" ng-bind-html="sent.sent"></span>
+
+        </span>
+      <div class="statusBox"><b>{{ countTxs($index) }}</b> temporal expressions in this doc</div>
+      </div>
+    </div>
+    
+</div>
+
+<!-- rightBox: RightView -->
+<div id="rightBox">
+
+  <!-- Editor -->
+  
+
+  
+  <!-- ToolBox -->
+  <div id="toolBox" ng-click="editDate=false">
+
+
+    <div id="gohome" class="ctlBtns toolBoxBtn" ng-class="{ home: !dateSelected}" title="Show timeline description" ng-click="gohome()"></div>
+
+    <!-- Export to Timeline js -->
+    <div id="exportState" class="ctlBtns toolBoxBtn" title="Export the Timeline" ng-click="uploadData=false;downloadData=false;exportData=!exportData">
+      <ul ng-if="exportData" id="exportDataOptions">
+        <li ng-click="saveState('final')">
+          TLC Export<br>
+          <p><i>Generats unique, distributable URL (data is saved in the cloud and publicly available through the generated link)</i></p>
+        </li>
+        <li ng-click="exportAsJson()"><a href="tljs" target="_blank">TimelineJS Export<br>
+          <p><i>Opens TimelineJS project (only temporarily available, but can be downloaded as ZIP file via the "Save"-Button below)</i></p></a></li>
+      </ul>
+    </div>
+
+    <!-- Save current state -->
+    
+    <div id="saveState" class="ctlBtns toolBoxBtn" title="Save this state of the Timeline" ng-click="uploadData=false;exportData=false;downloadData=!downloadData"></div>
+    <ul ng-if="downloadData" id="downloadDataOptions">
+      <li ng-click="saveState()">TLC's .tl file</li>
+      <li ng-click="downloadJson()">JSON file</li>
+      <li ng-click="downloadZip()" style="line-height:18px;padding:8px;">ZIP folder<br><small><i>TimelineJS project</i></small></li>
+    </ul>
+
+    <!-- Import Data-->
+    <div id="loadData" class="ctlBtns toolBoxBtn" title="Load in previously saved data" ng-click="downloadData=false;exportData=false;uploadData=!uploadData"></div>
+    <ul ng-if="uploadData" id="loadDataOptions">
+      <li ng-class="{ notSelectable: !prevData}" ng-click="loadData('localStorage')">Load previous state</li>
+      <li onclick="triggerUpload()">Load from file</li>
+      <input id="uploadFile" onchange="angular.element(this).scope().loadData(this)" accept=".tl" type="file" style="display:none;"/>
+    </ul>
+
+    <div id="addDate" class="ctlBtns toolBoxBtn" title="Add a single event" ng-click="addDate()"></div>
+
+    <div id="mergeDates" class="ctlBtns toolBoxBtn" ng-if="severalSelected" title="Merge these dates" ng-click="mergeDates()"></div>
+
+    <div id="deleteAll" class="ctlBtns toolBoxBtn" ng-if="severalSelected" title="Delete these dates" ng-click="deleteDate()"></div>
+
+  </div>
+  <div id="tooltipbox" class="tt">Show timeline description</div>
+
+  <!-- ToolBox END -->
+
+  <!-- General Timeline information -->
+  <div class="display" ng-show="!dateSelected">
+
+    <!-- Editable TL Title -->
+    <ng-switch on="editSubtitle" id="displaySubtitle" class="editorfield">
+      <input style="margin-bottom:10px;" ng-switch-when="true" onkeypress='validate(event,this)' ng-model="$parent.tlDescr[0]" unfocus="disableEdit('d')"></input>
+      <div style="margin-bottom:10px;" ng-switch-default ng-click="enableEdit('d')"><span class="ctl">{{ tlDescr[0] }}</span></div>
+    </ng-switch>
+
+    <!-- Editable Content -->
+    <ng-switch on="editContent" id="displayContent">
+      <!-- Edit Mode -->
+      <textarea rows="5" style="width:80%" ng-switch-when="true" ng-model="$parent.tlDescr[1]" unfocus="disableEdit('c')"></textarea>
+      <!-- Preview Mode -->
+      <div ng-switch-default class="ctl" ng-click="enableEdit('c')"> <p>{{ tlDescr[1] }}</p> </div>
+    </ng-switch>
+
+    <!-- Change Track Names -->
+    <div id="tracks">
+      <p>Track names: <!--span class="help" id="trackhelp">?</span--></p>
+      <ng-switch on="editTrack[0]" class="trackNames" id="trackName_0">
+        <input ng-switch-when="true" ng-model="$parent.trackNames[0]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_0')"></input>
+        <div ng-switch-default class="track trackColor_0" ng-click="enableEdit('edittrack_0')">{{ trackNames[0] }}</div>
+      </ng-switch>
+
+      <ng-switch on="editTrack[1]" class="trackNames" id="trackName_1">
+        <input ng-switch-when="true" ng-model="$parent.trackNames[1]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_1')"></input>
+        <div ng-switch-default class="track trackColor_1" ng-click="enableEdit('edittrack_1')">{{ trackNames[1] }}</div>
+      </ng-switch>
+
+      <ng-switch on="editTrack[2]" class="trackNames" id="trackName_2">
+        <input ng-switch-when="true" ng-model="$parent.trackNames[2]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_2')"></input>
+        <div ng-switch-default class="track trackColor_2" ng-click="enableEdit('edittrack_2')">{{ trackNames[2] }}</div>
+      </ng-switch>
+
+      <ng-switch on="editTrack[3]" class="trackNames" id="trackName_3">
+        <input ng-switch-when="true"  ng-model="$parent.trackNames[3]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_3')"></input>
+        <div ng-switch-default class="track trackColor_3" ng-click="enableEdit('edittrack_3')">{{ trackNames[3] }}</div>
+      </ng-switch>
+
+      <ng-switch on="editTrack[4]" class="trackNames" id="trackName_4">
+        <input ng-switch-when="true" ng-model="$parent.trackNames[4]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_4')"></input>
+        <div ng-switch-default class="track trackColor_4" ng-click="enableEdit('edittrack_4')">{{ trackNames[4] }}</div>
+      </ng-switch>
+
+      <ng-switch on="editTrack[5]" class="trackNames" id="trackName_5">
+        <input ng-switch-when="true" ng-model="$parent.trackNames[5]" onkeypress='return validate(event,this)' unfocus="disableEdit('edittrack_5')"></input>
+        <div ng-switch-default class="track trackColor_5" ng-click="enableEdit('edittrack_5')">{{ trackNames[5] }}</div>
+      </ng-switch>
+    </div>
+
+  </div>
+      
+
+
+    <!-- Single dates information -->
+    <div class="display" ng-show="dateSelected && timexes[currIndex].visible">
+      
+     <div style="margin-bottom:10px;">
+      <!-- Editable Date -->
+      <ng-switch on="editDate" id="displayDate" class="editorfield">
+        <span class="label">Date:</span>
+      <!-- EDIT MODE -->
+        <div ng-switch-when="true" id="dateEditMode">
+        
+          <input title="time of day" maxlength="4" onkeypress='return validate(event)' size="4" ng-if="dateInfo[0].dateArray[3]!='xxxx'" ng-model="$parent.dateInfo[0].dateArray[3]" ></input>
+            <span class="addDimension" ng-click="addTime('start')" ng-if="dateInfo[0].dateArray[3]=='xxxx'" ng-model="$parent.dateInfo[0].dateArray[3]" >time</span>
+
+          <input title="day in month" maxlength="2" onkeypress='return validate(event)' size="2" ng-if="dateInfo[0].dateArray[2]!='xx'" ng-model="$parent.dateInfo[0].dateArray[2]" ></input>
+            <span class="addDimension" ng-click="addDay('start')" ng-if="dateInfo[0].dateArray[2]=='xx'" ng-model="$parent.dateInfo[0].dateArray[2]" >day</span>
+
+          <input title="Month" maxlength="2" onkeypress='return validate(event)' size="2" ng-if="dateInfo[0].dateArray[1]!='xx'" ng-model="$parent.dateInfo[0].dateArray[1]" ></input>
+            <span class="addDimension" ng-click="addMonth('start')" ng-if="dateInfo[0].dateArray[1]=='xx'" ng-model="$parent.dateInfo[0].dateArray[1]" >month</span>
+
+          <input id="startdateYear" title="Year" maxlength="4" onkeypress='return validate(event)' size="4" ng-if="dateInfo[0].dateArray[0]!='xxxx'" ng-model="$parent.dateInfo[0].dateArray[0]"></input>
+            <!--div class="addDimension" ng-if="dateInfo[0].dateArray[0]=='xxxx'" ng-model="$parent.dateInfo[0].dateArray[0]">+</div-->
+        
+        
+        <!-- IF DURATION -->
+        <span ng-if="dateInfo[0].typ=='duration'">
+          <span> - </span>
+          <input maxlength="4" onkeypress='return validate(event)' size="4" ng-if="dateInfo[0].dateArray[7]!='xxxx'" ng-model="$parent.dateInfo[0].dateArray[7]" ></input>
+            <span class="addDimension" ng-click="addTime('end')" ng-if="dateInfo[0].dateArray[7]=='xxxx'" ng-model="$parent.dateInfo[0].dateArray[7]" >time</span>
+
+          <input maxlength="2" onkeypress='return validate(event)' size="2" ng-if="dateInfo[0].dateArray[6]!='xx'" ng-model="$parent.dateInfo[0].dateArray[6]" ></input>
+            <span class="addDimension" ng-click="addDay('end')" ng-if="dateInfo[0].dateArray[6]=='xx'" ng-model="$parent.dateInfo[0].dateArray[6]" >day</span>
+
+          <input maxlength="2" onkeypress='return validate(event)' size="2" ng-if="dateInfo[0].dateArray[5]!='xx'" ng-model="$parent.dateInfo[0].dateArray[5]" ></input>
+            <span class="addDimension" ng-click="addMonth('end')" ng-if="dateInfo[0].dateArray[5]=='xx'" ng-model="$parent.dateInfo[0].dateArray[5]" >month</span>
+
+          <input maxlength="4" onkeypress='return validate(event)' size="4" ng-if="dateInfo[0].dateArray[4]!='xxxx'" ng-model="$parent.dateInfo[0].dateArray[4]"></input>
+        </span>
+
+        <!-- Date Editing Control Panel -->
+
+          <span title="Add a second date to create a time span" ng-if="dateInfo[0].typ=='date'||dateInfo[0].typ=='neither'" class="changeUnit ctlBtns" ng-click="changeUnit('toDur')"></span>
+          <span title="Make it an event instead of a time span" ng-if="dateInfo[0].typ=='duration'" class="changeUnit ctlBtns durtodate" ng-click="changeUnit('toDate')"></span>
+
+          <span class="ctlBtns" title="Apply changes" id="check" ng-click="checkThisDate()"></span>
+
+        <!--/div-->
+
+        </div>
+        <!-- END EDIT MODE -->
+        <div ng-switch-default ng-click="enableEdit('t')">
+          <span class="datetitle ctl">{{ dateInfo[0].title }}<span>
+        </div>
+      </ng-switch>
+    </div>
+
+      <div style="margin-bottom:10px;">
+        <!-- Editable Subtitle -->
+        <ng-switch on="editSubtitle" id="displaySubtitle" class="editorfield">
+          <span class="label">Title:<br></span>
+          <input ng-switch-when="true" ng-model="$parent.dateInfo[0].subtitle" onkeypress='validate(event,this)' unfocus="disableEdit('d')"></input>
+          <div ng-switch-default ng-click="enableEdit('d')">
+            <span class='subtitle ctl'>{{ dateInfo[0].subtitle }}</span>
+          </div>
+        </ng-switch>
+      </div>
+    
+
+        <!-- Editable Content -->
+        <ng-switch on="editContent" id="displayContent">
+          <!-- Edit Mode -->
+          <span class="label">Content:<br></span>
+
+          <textarea style="width:100%; height:40px;" ng-switch-when="true" ng-model="$parent.dateInfo[0].sent" unfocus="disableEdit('c')"></textarea>
+          <!-- Preview Mode -->
+          <div class="content ctl" ng-switch-default ng-click="enableEdit('c')">
+            <p ng-bind-html="highlightTimex(dateInfo[0].sent, dateInfo[0].timex)"></p>
+          </div>
+        </ng-switch>
+        <br>
+
+        
+        <!-- Change Tracks -->
+        <div id="changeTrack">
+          <div id="changeTrackBtn" ng-click="changeTrackVis=!changeTrackVis">Track:</div>
+            <div id="changeTrack_0" ng-click="changeTrack(0)" ng-class="{activeBtn: dateInfo[0].trackNr == 0}" class="changeTrack bgColor_0">1</div>
+            <div id="changeTrack_1" ng-click="changeTrack(1)" ng-class="{activeBtn: dateInfo[0].trackNr == 1}" class="changeTrack bgColor_1">2</div>
+            <div id="changeTrack_2" ng-click="changeTrack(2)" ng-class="{activeBtn: dateInfo[0].trackNr == 2}" class="changeTrack bgColor_2">3</div>
+            <div id="changeTrack_3" ng-click="changeTrack(3)" ng-class="{activeBtn: dateInfo[0].trackNr == 3}" class="changeTrack bgColor_3">4</div>
+            <div id="changeTrack_4" ng-click="changeTrack(4)" ng-class="{activeBtn: dateInfo[0].trackNr == 4}" class="changeTrack bgColor_4">5</div>
+            <div id="changeTrack_5" ng-click="changeTrack(5)" ng-class="{activeBtn: dateInfo[0].trackNr == 5}" class="changeTrack bgColor_5">6</div>
+        </div>
+
+        <!-- Media -->
+        <div id="addMedia">
+          <div id="addMediaBtn" ng-click="addMedia=!addMedia"> {{ dateInfo[0].medium['hasMedia'] | iif : "Has" : "Add" }} Media</div>
+          <div id="mediaIndicator" ng-class="{ hasMedia: dateInfo[0].medium['hasMedia'] } "></div>
+        </div>
+        <!-- Source -->
+        <div id="addMediaBox" class="mediaBtn" ng-if="addMedia">
+            <ng-switch on="editMediaSource" id="mediaSource" class="editorfield">
+              <input ng-switch-when="true" ng-model="$parent.dateInfo[0].medium['source']" onkeypress='validate(event,this)' unfocus="disableEdit('ms')"></input>
+              <div class="media ctl" ng-switch-default ng-click="enableEdit('ms')"><p>{{ dateInfo[0].medium["source"] }}</p></div>
+            </ng-switch>
+
+            <!-- Credit -->
+            <ng-switch on="editMediaCredit" id="mediaCredit" class="mediaBtn editorfield">
+              <input ng-switch-when="true" ng-model="$parent.dateInfo[0].medium['credit']" onkeypress='validate(event,this)' unfocus="disableEdit('mcr')"></input>
+              <div class="media ctl" ng-switch-default ng-click="enableEdit('mcr')"><p>{{ dateInfo[0].medium["credit"] }}</p></div>
+            </ng-switch>
+
+            <!-- Caption -->
+            <ng-switch on="editMediaCaption" id="mediaCaption" class="mediaBtn editorfield">
+              <input ng-switch-when="true" ng-model="$parent.dateInfo[0].medium['caption']" onkeypress='validate(event,this)' unfocus="disableEdit('mca')"></input>
+              <div class="media ctl" ng-switch-default ng-click="enableEdit('mca')"><p>{{ dateInfo[0].medium["caption"] }}</p></div>
+            </ng-switch>
+        </div>
+
+      <div id="prevDate" class="ctlBtns" title="Go to the previous date" ng-click="arrowKey('prev','btn')"></div>
+      <div class="tool ctlBtns" title="Delete this date" ng-click="deleteDate('one')" id="tool_delete"></div>
+      <div id="nextDate" class="ctlBtns" title="Go to the next date" ng-click="arrowKey('next','btn')"></div>
+
+      
+
+      </div>
+      
+  <div id="recoverElement" ng-show="!timexes[currIndex].visible && dateInfo.length!=0">
+          <i>You deleted this element</i><br>
+          <div ng-click="recoverDate()" style="cursor:pointer; color:#ff6138;"><b>No!</b> Bring it back please!</div>
+      </div>
+
+  </div>
+  </div>
+
+</div>
+
+<div id="inputOverlay">
+    <div id="closeInput" onclick="closeInput()"></div>
+    <div id="inputContainer">
+      
+
+      <div id="insertText">
+        <h1>Insert your text here</h1>
+        <form style="height:100%" accept-charset="UTF-8">
+          <label for="title" style="float:left;padding-right: 10px;"><b>Title</b> </label>
+          <input type="text" style="float:left; width:255px;" name="title" placeholder="Document Title"> 
+
+          <!-- Doc Choice -->
+          <div id="chooseTrack_0" class="chooseTrack bgColor_0">1</div>
+          <div id="chooseTrack_1" class="chooseTrack bgColor_1">2</div>
+          <div id="chooseTrack_2" class="chooseTrack bgColor_2">3</div>
+          <div id="chooseTrack_3" class="chooseTrack bgColor_3">4</div>
+          <div id="chooseTrack_4" class="chooseTrack bgColor_4">5</div>
+          <div id="chooseTrack_5" class="chooseTrack bgColor_5">6</div><br><br>
+        
+          <label for="content"><b>Content</b></label><br>
+          <textarea name="content" id="content" placeholder="Drop the content here."></textarea><br>
+
+          <label class="optional" for="date">Which date does "today" refer to in the document (optional):</label>
+          <input id="todayInput" type="date" size="50" name="date">
+        
+        <!--label class="optional" for="source">Source</label> <input type="text" size="50" name="source"-->
+        <p style="text-align:right; margin:0;">
+          <span class="btn" ng-click="getTimexes()" style="padding: 5px 10px;">Go!</span>
+        </p>
+        </form>
+      </div>
+
+      <div id="insertFile">
+      <p>Or choose from an example file 
+        <select
+          ng-model="selectedFile"
+          ng-change="addDocument(selectedFile)"
+          ng-options="file as file for file in tempFiles">>
+          <option> </option>
+          <!--option  ng-repeat="file in tempFiles" ng-click="addDocument(file)" value="{{file}}" ng>{{file}}</option-->
+        </select>
+      </p>
+      </div>
+
+
+      
+      <!--div id="addDoc" class="ctlBtns" title="Add a new document" ng-click="uploadDoc=!uploadDoc"></div>
+      <div id="selectBox" ng-if="uploadDoc">
+      <ul><li ng-repeat="file in tempFiles" ng-click="addDocument(file)"> {{file}} </li></ul>
+      </div-->
+    </div>
+</div>
+
+<div class="loading">
+  <img src="../static/img/waiting.gif">
+</div>
+
+<div id="saved">Current status was stored.</div>
+<div id="guide"><a href="http://www.cs.ubc.ca/group/infovis/software/TimeLineCurator/" target="_blank">About & Help</a></div>
+
+{% endraw %}
+
+<!-- Analytics-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-59198640-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+</body>
+</html>

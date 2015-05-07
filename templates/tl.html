@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Timeline JS Example</title>
+    <meta charset="utf-8">
+    <meta name="description" content="TimelineJS example">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Zip File Creation Library -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lib/jquery-latest.min.js')}}"></script>
+    <style>
+      html, body { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; height:100%; padding: 0px; margin: 0px; }
+     
+
+    </style>
+  </head>
+  <body>
+
+  
+      <!-- BEGIN Timeline Embed -->
+      <div id="tl"></div>
+
+      <script type="text/javascript">
+
+      var fromStorage = localStorage.getItem('myTlData')
+      var tlObject = JSON.parse(fromStorage);
+
+      var timeline_config = {
+        type : "timeline",
+        width: "100%",
+        height: "100%",
+        source: tlObject,
+        embed_id: 'tl'
+      }
+
+
+
+      </script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/storyjs-embed.js')}}"></script>
+      <!-- END Timeline Embed-->
+  </body>
+</html>
