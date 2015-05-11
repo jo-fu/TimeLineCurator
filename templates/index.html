@@ -247,10 +247,12 @@
     <!-- Single dates information -->
     <div class="display" ng-show="dateSelected && timexes[currIndex].visible">
       
+     
      <div style="margin-bottom:10px;">
       <!-- Editable Date -->
+
       <ng-switch on="editDate" id="displayDate" class="editorfield">
-        <span class="label">Date:</span>
+        <!--span class="label">Date:</span-->
       <!-- EDIT MODE -->
         <div ng-switch-when="true" id="dateEditMode">
         
@@ -293,13 +295,21 @@
 
         </div>
         <!-- END EDIT MODE -->
-        <div ng-switch-default ng-click="enableEdit('t')">
-          <span class="datetitle ctl">{{ dateInfo[0].title }}<span>
+        
+
+        <div ng-switch-default>
+          <!-- ARROW KEY: prev -->
+          <div id="prevDate" class="ctlBtns" title="Go to the previous date" ng-click="arrowKey('prev','btn')"></div>
+          <span class="datetitle ctl" ng-click="enableEdit('t')">{{ dateInfo[0].title }}</span>
+          
+          <!-- ARROW KEY: next -->
+          <div id="nextDate" class="ctlBtns" title="Go to the next date" ng-click="arrowKey('next','btn')"></div>
         </div>
       </ng-switch>
+    
     </div>
-
-      <div style="margin-bottom:10px;">
+    <br>
+      <div style="margin:10px 0;">
         <!-- Editable Subtitle -->
         <ng-switch on="editSubtitle" id="displaySubtitle" class="editorfield">
           <span class="label">Title:<br></span>
@@ -328,18 +338,19 @@
         <!-- Change Tracks -->
         <div id="changeTrack">
           <div id="changeTrackBtn" ng-click="changeTrackVis=!changeTrackVis">Track:</div>
-            <div id="changeTrack_0" ng-click="changeTrack(0)" ng-class="{activeBtn: dateInfo[0].trackNr == 0}" class="changeTrack bgColor_0">1</div>
-            <div id="changeTrack_1" ng-click="changeTrack(1)" ng-class="{activeBtn: dateInfo[0].trackNr == 1}" class="changeTrack bgColor_1">2</div>
-            <div id="changeTrack_2" ng-click="changeTrack(2)" ng-class="{activeBtn: dateInfo[0].trackNr == 2}" class="changeTrack bgColor_2">3</div>
-            <div id="changeTrack_3" ng-click="changeTrack(3)" ng-class="{activeBtn: dateInfo[0].trackNr == 3}" class="changeTrack bgColor_3">4</div>
-            <div id="changeTrack_4" ng-click="changeTrack(4)" ng-class="{activeBtn: dateInfo[0].trackNr == 4}" class="changeTrack bgColor_4">5</div>
-            <div id="changeTrack_5" ng-click="changeTrack(5)" ng-class="{activeBtn: dateInfo[0].trackNr == 5}" class="changeTrack bgColor_5">6</div>
+          <div ng-repeat="track in trackNames"
+            id="changeTrack_{{ $index }}"
+            ng-click="changeTrack($index)"
+            ng-class="{chosen: dateInfo[0].trackNr == $index}"
+            class="changeTrack bgColor_{{$index}}">
+            {{ $index+1 }}
+          </div>
         </div>
 
         <!-- Media -->
         <div id="addMedia">
           <div id="addMediaBtn" ng-click="addMedia=!addMedia"> {{ dateInfo[0].medium['hasMedia'] | iif : "Has" : "Add" }} Media</div>
-          <div id="mediaIndicator" ng-class="{ hasMedia: dateInfo[0].medium['hasMedia'] } "></div>
+          <!--div id="mediaIndicator" ng-class="{ hasMedia: dateInfo[0].medium['hasMedia'] } "></div-->
         </div>
         <!-- Source -->
         <div id="addMediaBox" class="mediaBtn" ng-if="addMedia">
@@ -361,9 +372,9 @@
             </ng-switch>
         </div>
 
-      <div id="prevDate" class="ctlBtns" title="Go to the previous date" ng-click="arrowKey('prev','btn')"></div>
+      
       <div class="tool ctlBtns" title="Delete this date" ng-click="deleteDate('one')" id="tool_delete"></div>
-      <div id="nextDate" class="ctlBtns" title="Go to the next date" ng-click="arrowKey('next','btn')"></div>
+      
 
       
 

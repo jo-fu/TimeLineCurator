@@ -24,9 +24,11 @@ $(document).on('keyup keydown', function(e){
 $(document).ready( function(){ 
   $(".ctlBtns")
     .on("mouseover" , function(){ 
-      if($(this).attr("id") == "addDoc"){ var tt = "#addDocTooltip" }
-      else{ var tt = "#tooltipbox"}
-      showTooltip($(this),tt)
+      var el = $(this).attr("id");
+      if(el!="addDoc" && el!="prevDate" && el!="nextDate" && el!="tool_delete"){
+        showTooltip($(this),"#tooltipbox")
+      }
+      
     })
     .on("mouseout" , function(){ $(".tt").css("display","none") })
 })

@@ -12,22 +12,22 @@ html, body {
   width: 100%; }
 
 .bgColor_0 {
-  background-color: #377eb8; }
+  border-bottom-color: #377eb8 !important; }
 
 .bgColor_1 {
-  background-color: #4daf4a; }
+  border-bottom-color: #4daf4a !important; }
 
 .bgColor_2 {
-  background-color: #984ea3; }
+  border-bottom-color: #984ea3 !important; }
 
 .bgColor_3 {
-  background-color: #ff7f00; }
+  border-bottom-color: #ff7f00 !important; }
 
 .bgColor_4 {
-  background-color: #e41a1c; }
+  border-bottom-color: #e41a1c !important; }
 
 .bgColor_5 {
-  background-color: #a65628; }
+  border-bottom-color: #a65628 !important; }
 
 #descriptionBox {
   height: 19px;
@@ -202,7 +202,7 @@ html, body {
       margin: -10px 13px;
       position: absolute; }
       #leftBox #listData table .listEl .symbol_duration p {
-        margin: -9px 1px;
+        margin: -8px -6px;
         color: #fff;
         font-size: 12px; }
     #leftBox #listData table .listEl .symbol_neither {
@@ -328,6 +328,8 @@ html, body {
   -webkit-box-shadow: 0px 0px 0px #ccc;
   box-shadow: 0px 0px 0px #ccc;
   margin: 4px 0 0 2px; }
+#rightBox .datetitle {
+  float: left; }
 #rightBox #toolBox {
   position: absolute;
   right: 0;
@@ -476,7 +478,8 @@ html, body {
   #rightBox .display #prevDate {
     background-position: left; }
   #rightBox .display #nextDate {
-    background-position: right; }
+    background-position: right;
+    margin-left: 10px; }
 
 .ctl {
   padding: 1px 10px;
@@ -491,7 +494,7 @@ html, body {
 .ctlBtns {
   width: 25px;
   height: 25px;
-  margin: 4px 8px 0 0;
+  margin: 2px 10px 4px 0;
   border: 1px solid #efefef;
   background-repeat: no-repeat;
   background-color: #fff;
@@ -682,21 +685,29 @@ input {
 .chooseTrack, .changeTrack {
   float: left;
   margin: 0 5px 2px 3px;
-  padding: 2px 9px;
+  border-color: #ddd;
+  border-style: solid;
+  border-width: 1px 1px 4px;
+  padding: 1px 8px;
   font-size: 0.8em;
   font-weight: bold;
-  color: #fff;
+  color: #000;
   -moz-box-shadow: 2px 2px 0px #ccc;
   -webkit-box-shadow: 2px 2px 0px #ccc;
-  box-shadow: 2px 2px 0px #ccc; }
+  box-shadow: 2px 2px 0px #ccc;
+  background-color: #fff; }
 
 .chosen, .changeTrack:active, .chooseTrack:active {
   margin: 1px 3px 0 5px;
   outline: 2px solid #efefef;
+  border-width: 2px 2px 4px;
   -moz-box-shadow: 0px 0px 0px #ccc;
   -webkit-box-shadow: 0px 0px 0px #ccc;
   box-shadow: 0px 0px 0px #ccc;
-  border: 2px inset #999;
+  border-style: inset;
+  border-color: #999;
+  background-color: #ccc;
+  color: #555;
   padding: 0px 7px; }
 
 #fileinfo {

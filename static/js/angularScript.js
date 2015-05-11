@@ -105,9 +105,9 @@ app
 	$scope.changeUnit = function(unit){ $scope = DateHandling.changeUnit($scope,unit) }
 	$scope.switchView = function(v){ DateHandling.switchView(v) }
 	$scope.hideDoc = function(v){ $scope.timexes = DateHandling.hideDoc(v,$scope.timexes); $scope.updateD3Tl($scope.timexes,$scope.dcts, "delete") }
-	$scope.changeTrack = function(nr){ DateHandling.changeTrack($scope.timexes, $scope.currIndex, nr) }
+	$scope.changeTrack = function(nr){ DateHandling.changeTrack($scope.timexes, $scope.currIndex, nr); }
 	$scope.addDocument = function(val,source){ DateHandling.addDocument($scope,$sce,$http,val,source,CreateArray) }
-	$scope.arrowKey = function(dir){ DateHandling.arrowKey($scope,dir) }
+	$scope.arrowKey = function(dir,origin){ DateHandling.arrowKey($scope,dir,origin) }
 
 	$scope.loadData = function(source){ $scope = DateExporting.loadData(source,$scope,$sce,CreateArray,CreateTimeline) }
 	$scope.saveState = function(state){ DateExporting.saveState($scope, state) }
@@ -162,8 +162,8 @@ this.buildTl = function($scope){
   	d3.select("body").on("keydown", function() {
 	  	var key = d3.event.keyCode
 	  	if (!$("input, textarea").is(":focus")) {
-	      	if(key == 39 || key == 40){ $scope.arrowKey("next") }
-	      	else if(key == 37 || key == 38){ $scope.arrowKey("prev") }
+	      	if(key == 39 || key == 40){ $scope.arrowKey("next","key") }
+	      	else if(key == 37 || key == 38){ $scope.arrowKey("prev","key") }
 	      	// Delete Element
 	      	else if(key == 8 || key == 46){
 	      		event.preventDefault();
@@ -430,7 +430,6 @@ this.updateD3Tl = function(tx, dcts, action, clickFct, nr){
 	/* In case there will be any difference between move and delete */
 	if(action=="resize"){
 		var newHeight = parseInt($("#topBox").height())
-		console.log(newHeight)
 
 		var newWidth = $("#topBox").width()
 
@@ -859,7 +858,7 @@ app.service('DateHandling', function(){
 		return $scope;
 	}
 
-	this.arrowKey = function($scope,dir){
+	this.arrowKey = function($scope,dir,origin){
 		if($scope.dateSelected){
 			
 			var listLength = $('#listData tr').length
@@ -893,7 +892,9 @@ app.service('DateHandling', function(){
 						newListEl = $("#listData tr:nth-child("+ newIndex +")").attr("id").split("_")[1]
 					}
 				}
-				$scope.makeSelection($scope.timexes[newListEl].sentNr, $scope.timexes[newListEl], "arrowKey")
+
+				if(origin == "key" || !origin){ var origin = "arrowKey";}
+				$scope.makeSelection($scope.timexes[newListEl].sentNr, $scope.timexes[newListEl], origin)
 			}
 		}
 	}
@@ -904,9 +905,8 @@ app.service('DateHandling', function(){
 		$scope.addMedia = false;
 		$scope.changeTrackVis = false;
 		$(".display .changeTrack").removeClass("chosen");
+		$("#changeTrack_"+d.trackNr).addClass("chosen");
 		if(sentNr===false){ sentNr = -1 }
-
-		//console.log(d)
 
 		// If coming from Sentence selection, take first timex from sentence as new index
 		if(origin=="fromSent"){
