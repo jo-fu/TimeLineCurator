@@ -14,8 +14,6 @@ from ternip.formats.tern import TernDocument
 
 from hashlib import sha1
 
-from bs4 import BeautifulSoup
-
 import requests
 
 # could alternatively use goose
