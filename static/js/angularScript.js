@@ -62,10 +62,8 @@ app
 	// PYTHON CALL
 	$scope.scrapeURL = function(){
 		var myURL = $('#url-form input[name="URL"]').val()
-		console.log(JSON.stringify(myURL));
 		if(myURL!==""){
 			thisURL = { 'myURL' : myURL }
-			console.log(JSON.stringify(thisURL));
 			$(".loading").fadeIn(300)
 			$.ajax({
 			    type: "POST",
