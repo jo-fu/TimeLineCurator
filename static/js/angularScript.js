@@ -59,6 +59,32 @@ app
 		}
 	}
 
+	// PYTHON CALL
+	$scope.scrapeURL = function(){
+		var myURL = $('#url-form input[name="URL"]').val()
+		console.log(JSON.stringify(myURL));
+		if(myURL!==""){
+			thisURL = { 'myURL' : myURL }
+			console.log(JSON.stringify(thisURL));
+			$(".loading").fadeIn(300)
+			$.ajax({
+			    type: "POST",
+			    data: JSON.stringify(thisURL),
+			    url: "/scrape",
+			    contentType: 'application/json;charset=UTF-8',
+			    success: function(data){
+			    	$(".loading").fadeOut(300)
+			    	if(data.result=="fetching unsucessful"){ alert("Sorry, fetching was unsucessful. Try copy/pasting text instead.") }
+			    	else{
+			    		$('#inputOverlay input[name="title"]').val(data.result.title);
+			    		$('#inputOverlay textarea[name="content"]').val(data.result.text);
+			    		// Publication date retrieval not reliable enough to use yet
+			    	}
+			    }
+			})
+		}
+	}
+
 	$scope.showDateInfo = function(txObject){ return CreateTimeline.showDateInfo(txObject) }
 
 	// Linked highlighting
