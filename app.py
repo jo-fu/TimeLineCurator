@@ -5,9 +5,6 @@ from boto.s3.connection import S3Connection
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 
-
-#from flask.ext.triangle import Triangle
-
 import nltk
 import ternip
 from ternip.formats.tern import TernDocument
@@ -68,8 +65,6 @@ def scrape():
 @app.route('/dothenlp', methods=['GET', 'POST'])
 def dothenlp():
 
-    #return jsonify(result=request.json['myData'])
-
     if request.method == "POST":
         try:
             myData = request.json['myData']
@@ -88,8 +83,6 @@ def dothenlp():
             s = s.replace("_APOSTROPHE_", "&#39;")
             s = s.replace("_AND_", "&")
 
-            #s = s.replace("'","'")
-
             sent_tokens = nltk.sent_tokenize(s)
 
             t = str(doc).split("<TEXT>")[0]
@@ -101,18 +94,6 @@ def dothenlp():
             return jsonify(result=output)
         except:
             return jsonify(result="something wrong")
-
-            #t = t.replace("'","\'")
-
-            #print sent_tokens
-            #head = str(doc).split("<TEXT>")
-            output = t + "\n\n<SENTENCES>\n\n" + str(sent_tokens) + "\n\n</SENTENCES>"
-            return jsonify(result=output)
-        else:
-            #traceback.print_exc(file=sys.stdout)
-            return jsonify(result="something wrong")
-
-    #return jsonify(result = output)
 
 
 # Upload to Server
@@ -147,7 +128,3 @@ if __name__ == '__main__':
     app.debug = True
 
     app.run()
-
-    # FOR LATER?
-#if __name__ == '__main__':
-#    app.run( host="0.0.0.0", port=int("80"), debug=True )
