@@ -14,8 +14,6 @@ from ternip.formats.tern import TernDocument
 
 from hashlib import sha1
 
-import requests
-
 # could alternatively use goose
 from newspaper import Article
 
