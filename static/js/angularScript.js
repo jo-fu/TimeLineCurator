@@ -59,7 +59,7 @@ app
 		}
 	}
 
-	// PYTHON CALL
+	// PYTHON CALL for URL SCRAPING
 	$scope.scrapeURL = function(){
 		var myURL = $('#url-form input[name="URL"]').val()
 		if(myURL!==""){

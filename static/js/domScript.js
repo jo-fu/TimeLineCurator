@@ -81,7 +81,7 @@ function openInput(){
 }
 
 function showURL(){
-    $("#url-form").fadeIn(300);
+    $("#url-form").toggle(0);
 }
 
 function exitOverlay(e){ if(e.keyCode == 27){ closeInput() } }

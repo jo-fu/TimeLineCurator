@@ -906,3 +906,4 @@ input {
 #url-form {
   display: none;
 }
+#url-form label{ float:left; padding-right: 10px; }
