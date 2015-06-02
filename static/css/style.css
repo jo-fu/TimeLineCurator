@@ -797,7 +797,7 @@ input {
     #inputOverlay #inputContainer #insertText {
       background-color: #efefef;
       padding: 20px;
-      margin: 0 0 30px 0;
+      margin: 0;
       height: -webkit-calc(100% - 140px);
       height: -moz-calc(100% - 140px);
       height: calc(100% - 140px); }
@@ -902,3 +902,7 @@ input {
   margin: 2px; }
 
 /*# sourceMappingURL=style.css.map */
+
+#url-form {
+  display: none;
+}

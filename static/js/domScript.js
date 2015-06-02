@@ -80,6 +80,10 @@ function openInput(){
     $(document).on("keydown" , exitOverlay )
 }
 
+function showURL(){
+    $("#url-form").fadeIn(300);
+}
+
 function exitOverlay(e){ if(e.keyCode == 27){ closeInput() } }
 
 function closeInput(){
