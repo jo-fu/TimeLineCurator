@@ -41,6 +41,7 @@ app
 	// PYTHON CALL
 	$scope.getTimexes = function(){
 		var myData = preprocessing()
+
 		if(myData!=""){
 			thisData = { 'myData' : myData }
 			$(".loading").fadeIn(300)
@@ -61,7 +62,10 @@ app
 
 	// PYTHON CALL for URL SCRAPING
 	$scope.scrapeURL = function(){
-		var myURL = $('#url-form input[name="URL"]').val()
+		var url = $('#url-form input[name="URL"]')
+		var myURL = url.val()
+		
+
 		if(myURL!==""){
 			thisURL = { 'myURL' : myURL }
 			$(".loading").fadeIn(300)
@@ -74,6 +78,7 @@ app
 			    	$(".loading").fadeOut(300)
 			    	if(data.result=="fetching unsucessful"){ alert("Sorry, fetching was unsucessful. Try copy/pasting text instead.") }
 			    	else{
+			    		url.val("") // Empty input field
 			    		$('#inputOverlay input[name="title"]').val(data.result.title);
 			    		$('#inputOverlay textarea[name="content"]').val(data.result.text);
 			    		// Publication date retrieval not reliable enough to use yet
@@ -192,8 +197,6 @@ this.buildTl = function($scope){
 	      	else if(key == 8 || key == 46){
 	      		event.preventDefault();
 	      		$scope.deleteDate();
-	      		// Editor doesn't hide event when deleted over key
-	      		// ??
 	      	}
 	  	}
 	});
@@ -204,12 +207,12 @@ this.buildTl = function($scope){
 	.margin({ left: puffer/2, right:puffer*2, top: $("#topBox").height()-70, bottom:puffer })
 	.tickFormat({ tickTime: d3.time.years, tickInterval: 5, tickSize: 10 })
 	.click(function (d, i, datum) { $scope.clickingCircle(datum) })
+	
 
 	var myTl = d3.select("#timeline").html("").append("svg")
 			.attr("width", $("#topBox").width() - 20)
 			.attr("height", $("#topBox").height() - 20)
 			.attr("fill" , "none")
-			//.attr("viewBox","0,0,"+$("#topBox").width()+","+$("#topBox").height())
 	
 	myTl.append("g").attr("class", "ref") // Add group for reference lines
 	myTl.datum($scope.timexes).call(chart)
@@ -370,12 +373,13 @@ this.updateD3Tl = function(tx, dcts, action, clickFct, nr){
 			if(action=="newDoc" || action=="loadData"){ var classes = "timelineItem_sent_"+d.sentNr }
 			else{ var classes = ""}
 			return "timelineItem " + d.typ + " " + classes
-			
 		})
 		.attr("id", function(d){ return "timelineItem_"+ d.id })
 		.attr("fill" , function(d){ return getColor(d) })
 		.on("click", function (d) { clickFct(d); })
-
+		.on("mouseover", function(d) { showlabel(d) })
+		.on("mouseout", function(d) { $("#eventlabel").css("display","none") })
+ 
 	}
 	
 		
@@ -432,6 +436,7 @@ this.updateD3Tl = function(tx, dcts, action, clickFct, nr){
 			return puffer/2 + (dctstamp - beginning) * scaleFactor + 3;
 			});
 
+	// Position paths
 	paths
 	.attr("d", function(d){
 		// line
@@ -442,15 +447,7 @@ this.updateD3Tl = function(tx, dcts, action, clickFct, nr){
 		else{ return getSquarePath(d,beginning,scaleFactor) }
 		})
 	.attr("fill" , function(d){ return getColor(d) })
-		/*.attr("stroke-width" , function(d){
-			if(d.visible){
-				if(d.typ=="duration"){ return 0 }
-				else{  return 2 }
-			}
-			else{ return 0 }
-		})*/
 		
-
 	/* In case there will be any difference between move and delete */
 	if(action=="resize"){
 		var newHeight = parseInt($("#topBox").height())

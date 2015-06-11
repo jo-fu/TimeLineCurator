@@ -112,6 +112,19 @@ html, body {
     margin: 10px 10px 0 0;
     font-weight: normal;
     text-align: right; }
+#topBox #eventlabel {
+  display: none;
+  position: absolute;
+  background-color: #666;
+  font-size: 10px;
+  line-height: 12px;
+  color: #fff;
+  padding: 5px;
+  bottom: 100px;
+  left: 100px;
+  height: auto;
+  max-width: 200px;
+  width: auto; }
 
 #leftBox #tablehead {
   font-size: 0.8em;
@@ -383,6 +396,10 @@ html, body {
   width: -moz-calc(100% - 35px);
   width: calc(100% - 35px);
   padding: 10px; }
+  #rightBox .display #displayContent textarea {
+    width: -webkit-calc(100% - 30px);
+    width: -moz-calc(100% - 30px);
+    width: calc(100% - 30px); }
   #rightBox .display #tracks {
     margin-top: 15px; }
     #rightBox .display #tracks .track {
@@ -424,15 +441,15 @@ html, body {
     width: calc(100% - 25px);
     margin: 12px; }
   #rightBox .display .media {
-    margin: 10px;
-    padding: 5px; }
+    margin: 5px;
+    padding: 0px; }
     #rightBox .display .media p {
       font-size: 0.8em;
       margin: 0; }
   #rightBox .display #addMedia {
     width: 80px;
-    height: 35px;
-    margin: 20px 0 0 0px; }
+    height: 25px;
+    margin: 0; }
     #rightBox .display #addMedia #addMediaBtn {
       border: 1px solid #efefef;
       background-color: #fff;
@@ -458,8 +475,11 @@ html, body {
     #rightBox .display #addMedia .hasMedia {
       background-position: right; }
   #rightBox .display #addMediaBox {
-    padding: 1px 10px;
+    padding: 0;
     background-color: #efefef; }
+    #rightBox .display #addMediaBox input {
+      margin: 0px;
+      padding: 3px; }
   #rightBox .display #changeTrack {
     height: 35px;
     width: auto; }
@@ -595,7 +615,10 @@ p, .content {
   font-size: 12px;
   font-weight: normal;
   padding: 2px 5px;
-  margin: 0; }
+  margin: 0;
+  width: -webkit-calc(100% - 30px);
+  width: -moz-calc(100% - 30px);
+  width: calc(100% - 30px); }
 
 .label {
   font-size: 0.8em;
@@ -635,13 +658,16 @@ input {
 
 #displaySubtitle input {
   font-size: 14px;
-  margin: 1px 0 2px 0; }
+  margin: 1px 0 2px 0;
+  width: -webkit-calc(100% - 30px);
+  width: -moz-calc(100% - 30px);
+  width: calc(100% - 30px); }
 #displaySubtitle div, #displaySubtitle textarea {
   font-size: 18px;
   margin: 0 0 5px;
-  width: -webkit-calc(100% - 100px);
-  width: -moz-calc(100% - 100px);
-  width: calc(100% - 100px); }
+  width: -webkit-calc(100% - 30px);
+  width: -moz-calc(100% - 30px);
+  width: calc(100% - 30px); }
 
 #recoverElement {
   position: absolute;
@@ -797,10 +823,13 @@ input {
     #inputOverlay #inputContainer #insertText {
       background-color: #efefef;
       padding: 20px;
-      margin: 0;
+      margin: 0 0 30px 0;
       height: -webkit-calc(100% - 140px);
       height: -moz-calc(100% - 140px);
       height: calc(100% - 140px); }
+      #inputOverlay #inputContainer #insertText #url-form label {
+        float: left;
+        padding-right: 10px; }
     #inputOverlay #inputContainer #insertFile {
       background-color: #efefef;
       text-align: center;
@@ -809,13 +838,13 @@ input {
     #inputOverlay #inputContainer textarea {
       width: 100%;
       min-height: 100px;
-      height: -webkit-calc(100% - 190px);
-      height: -moz-calc(100% - 190px);
-      height: calc(100% - 190px);
+      margin-top: 10px;
+      height: -webkit-calc(100% - 200px);
+      height: -moz-calc(100% - 200px);
+      height: calc(100% - 200px);
       resize: none; }
   #inputOverlay h1 {
-    font-size: 20px;
-    margin: 0 0 15px 0; }
+    margin: 0; }
   #inputOverlay .optional {
     color: #666;
     font-style: italic;
@@ -902,8 +931,3 @@ input {
   margin: 2px; }
 
 /*# sourceMappingURL=style.css.map */
-
-#url-form {
-  display: none;
-}
-#url-form label{ float:left; padding-right: 10px; }

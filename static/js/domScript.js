@@ -40,6 +40,22 @@ function showTooltip(t,tt){
   if(t.attr("id")=="addDoc"){ $(tt).css("left" , t.offset().left - 5) }
 }
 
+function showlabel(d){
+  var ww = $("#topBox").width();
+  var thisid = "#timelineItem_" + d.id;
+
+  var labely = $("#topBox").height() - parseInt($(thisid).position().top)+2;
+  var labelx = parseInt($(thisid).position().left);
+  var toofarright = labelx>ww-200
+  if(toofarright){ labelx = labelx-200 } // don't know yet width of label
+
+  $("#eventlabel")
+    .css({ left : labelx , bottom : labely , "display" : "block"})
+    .html(d.sub)
+
+  if(toofarright){ $("#eventlabel").css({ left : (labelx+200-$("#eventlabel").width()+itemHeight/2) })}
+}
+
 function getDCT(file){ return file.match(/<DATE_TIME>([^<]*)<\/DATE_TIME>/)[1] }
 
 function setSentTx(id){ sentTx = id; }

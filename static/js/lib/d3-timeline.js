@@ -70,7 +70,7 @@
       return timeline;
     };
 
-    /* Keep for potential later usage
+    // Keep for potential later usage
 
     timeline.mouseover = function (mouseoverFunc) {
       if (!arguments.length) return mouseoverFunc;
@@ -83,7 +83,7 @@
       mouseout = mouseoverFunc;
       return timeline;
     };
-    */
+    
 
     return timeline;
   };
