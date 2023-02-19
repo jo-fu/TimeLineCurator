@@ -12,7 +12,7 @@ from ternip.formats.tern import TernDocument
 from hashlib import sha1
 
 # could alternatively use goose
-from newspaper import Article
+# from newspaper import Article
 
 
 nltk.data.path.append("./nltk_data")
@@ -41,22 +41,22 @@ def tlcOutput():
 
 
 # Route that will scrape URL
-@app.route('/scrape', methods=['GET', 'POST'])
-def scrape():
+# @app.route('/scrape', methods=['GET', 'POST'])
+# def scrape():
 
-    if request.method == "POST":
-        try:
-            myURL = request.json['myURL']
+#     if request.method == "POST":
+#         try:
+#             myURL = request.json['myURL']
 
-            article = Article(myURL)
-            article.download()
-            article.parse()
+#             article = Article(myURL)
+#             article.download()
+#             article.parse()
 
-            response = {'title': article.title, 'text': article.text,  'date': str(article.publish_date)}
-            return jsonify(result=response)
+#             response = {'title': article.title, 'text': article.text,  'date': str(article.publish_date)}
+#             return jsonify(result=response)
 
-        except:
-            return jsonify(result="fetching unsucessful")
+#         except:
+#             return jsonify(result="fetching unsucessful")
 
 
 # Route that will process the AJAX request, sum up two
