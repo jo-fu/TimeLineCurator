@@ -92,19 +92,19 @@ class Rule(object):
 
         return (pos, neg)
 
-    def _check_guards(self, to_check, (pos, neg)):
+    def _check_guards(self, to_check, posneg):
         """
         Given some text to check, and a tuple of positive and negative rules,
         check whether that text satisfies those guards
         """
 
         # first check positive rules
-        for guard in pos:
+        for guard in posneg[0]:
             if not guard.search(to_check):
                 return False
 
         # then negative rules
-        for guard in neg:
+        for guard in posneg[1]:
             if guard.search(to_check):
                 return False
 

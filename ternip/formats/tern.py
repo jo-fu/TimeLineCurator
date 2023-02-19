@@ -2,10 +2,10 @@
 
 import xml.dom.minidom
 
-import timex2
+from ternip.formats.timex2 import Timex2XmlDocument
 
 
-class TernDocument(timex2.Timex2XmlDocument):
+class TernDocument(Timex2XmlDocument):
     """
     A class which can handle TERN documents
     """
@@ -67,7 +67,7 @@ class TernDocument(timex2.Timex2XmlDocument):
         return x
 
     def __init__(self, file, nodename='TEXT', has_S=False, has_LEX=False, pos_attr=False):
-        timex2.Timex2XmlDocument.__init__(self, file, nodename, has_S, has_LEX, pos_attr)
+        Timex2XmlDocument.__init__(self, file, nodename, has_S, has_LEX, pos_attr)
 
     def _dct_to_xml_body(self):
         """
