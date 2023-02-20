@@ -51,6 +51,7 @@ app
 			    url: "/dothenlp",
 			    contentType: 'application/json;charset=UTF-8',
 			    success: function(data){
+					console.log('data', data)
 			    	closeInput()
 			    	$(".loading").fadeOut(300)
 			    	if(data.result=="something wrong"){ alert("Sorry, something went wrong. Something inside your input...") }
