@@ -162,7 +162,8 @@ class RecognitionRuleEngine(RuleEngine):
                     # Apply this rule, and update our states of rules waiting to
                     # run and rules that have been run
                     if after_ok:
-                        (sent, success) = rule.apply(sent)
+                        result = rule.apply(sent)
+                        sent, success = result
                         rules_run.add(rule.id)
                         rules_to_run.remove(rule)
 

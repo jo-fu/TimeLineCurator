@@ -74,7 +74,9 @@ def dothenlp():
             strdoc = str(doc)
             ref_date = find_between(strdoc, "<DATE_TIME>", "</DATE_TIME>").replace("-", "")
 
-            sents = recogniser.tag(doc.get_sents())
+            sentences = doc.get_sents()
+
+            sents = recogniser.tag(sentences)
             normaliser.annotate(sents, ref_date)
             doc.reconcile(sents)
             # Single Sentences
