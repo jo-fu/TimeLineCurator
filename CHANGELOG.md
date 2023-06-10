@@ -15,19 +15,20 @@ So if I want to keep TLC alive I will have to:
 - Fix all the broken things that come with package updates and major Python version jumps. Fun!
 
 ## v0.4 - 2015-06-11
-### Improvments
+### Improvements
 - Added labels with event title on hover inside Timeline View
 - Minor style changes in text input
 
 ## v0.3 - 2015-05-29
-### Improvments
+### Improvements
 The first community contribution from [@joshuarrrr](https://github.com/joshuarrrr). I remember having been very excited about this!!  
 @joshuarrrr added the functionality to scrape and parse article urls!
  
 ## v0.2 - 2015-05-27
-### Improvments
+### Improvements
 - Add the MIT license
 - Style changes for Control Panel and fix for selecting active track
 
 ## v0.1 - 2015-05-06
 ### Initial commit
+:rocket:
