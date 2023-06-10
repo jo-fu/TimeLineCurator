@@ -50,7 +50,7 @@ def date_to_dow(y, m, d):
     return w
 
 
-def nth_dow_to_day((m, dow, n), y):
+def nth_dow_to_day(tupel, y):
     """
     Figures out the day of the nth day-of-week in the month m and year y as an
     integer
@@ -60,6 +60,9 @@ def nth_dow_to_day((m, dow, n), y):
 
     Conversion from GUTime
     """
+    m = tupel[0]
+    dow = tupel[1]
+    n = tupel[2]
 
     if dow == 7:
         dow = 0

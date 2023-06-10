@@ -71,8 +71,11 @@ class Rule(object):
         # Copyright (C) 2001-2010 NLTK Project
         # Bird, Steven, Edward Loper and Ewan Klein (2009).
         # Natural Language Processing with Python.  O'Reilly Media Inc.
+        return_string = ''
+        for (word, pos, ts) in toks:
+            return_string += '<' + word + '~' + pos[1] + '>'
 
-        return ''.join('<' + w + '~' + pos + '>' for (w, pos, ts) in toks)
+        return return_string
 
         # End NLTK contribution
 
@@ -92,19 +95,19 @@ class Rule(object):
 
         return (pos, neg)
 
-    def _check_guards(self, to_check, (pos, neg)):
+    def _check_guards(self, to_check, posneg):
         """
         Given some text to check, and a tuple of positive and negative rules,
         check whether that text satisfies those guards
         """
 
         # first check positive rules
-        for guard in pos:
+        for guard in posneg[0]:
             if not guard.search(to_check):
                 return False
 
         # then negative rules
-        for guard in neg:
+        for guard in posneg[1]:
             if guard.search(to_check):
                 return False
 

@@ -2,6 +2,7 @@ import xml.dom.minidom
 import logging
 
 import nltk.tag
+from nltk import pos_tag
 import nltk.tokenize
 
 from ternip.timex import add_timex_ids
@@ -748,7 +749,12 @@ class XmlDocument(object):
 
                     # Clone the node to avoid destroying our original document
                     # and add it to our virtual S node
-                    s_node.appendChild(node.cloneNode(True))
+
+                    # Create a new Text node and set its data to match the original Text node
+                    cloned_node = xml.dom.minidom.Text()
+                    cloned_node.data = node.data
+                   
+                    s_node.appendChild(cloned_node)
 
 
         # Is this pre-tokenised into tokens?
@@ -770,8 +776,21 @@ class XmlDocument(object):
         else:
             # Don't need to keep nodes this time, so this is easier than
             # sentence tokenisation
-            tsents = [([(tok, None) for tok in nltk.tokenize.word_tokenize(sent)], nodes) for (sent, nodes) in sents]
-
+            tsents = []
+            for (sent, nodes) in sents:
+                
+                # Tokenize the sentence into individual words
+                tokenized_sent = nltk.tokenize.word_tokenize(sent)
+                
+                # Create a list of token tuples with None as the POS tag
+                token_tuples = [(tok, None) for tok in tokenized_sent]
+                
+                # Create a tuple pairing the token tuples with the nodes value
+                sent_tuple = (token_tuples, nodes)
+                
+                # Append the tuple to the tsents list
+                tsents.append(sent_tuple)
+        
         # Right, now POS tag. If POS is an attribute on the LEX tag, then just
         # use that
         if self._has_LEX and self._pos_attr:
@@ -779,8 +798,22 @@ class XmlDocument(object):
                       tsents]
         else:
             # use the NLTK
-            psents = [([t for t in nltk.tag.pos_tag([s for (s, a) in sent])], nodes) for (sent, nodes) in tsents]
-
+            psents = []
+            for (sent, nodes) in tsents:
+                # Extract the words from the token tuples in sent
+                words = [s for (s, a) in sent]
+                # Use NLTK's POS tagger to tag the words
+                pos_tags = pos_tag(words)
+                
+                # Create a list of word-tag tuples from the POS tags
+                tagged_sent = [(t, tag) for (t, tag) in zip(words, pos_tags)]
+                
+                # Create a tuple pairing the tagged sentence with the nodes value
+                sent_tuple = (tagged_sent, nodes)
+                
+                # Append the tuple to the psents list
+                psents.append(sent_tuple)
+        
         # Now do timexes - first get all timex tags in a sent
         txsents = []
         for (sent, s_node) in psents:
@@ -788,7 +821,7 @@ class XmlDocument(object):
 
             # Get all timexes in this sentence
             timex_nodes = s_node.getElementsByTagName(self._timex_tag_name)
-
+            
             # Now, for each timex tag, create a timex object to
             # represent it
             for timex_node in timex_nodes:
@@ -826,9 +859,12 @@ class XmlDocument(object):
         # Now get all TIMEX tags which are not inside <s> tags (and assume
         # they're non-consuming)
         for timex_node in self._xml_body.getElementsByTagName(self._timex_tag_name):
+            
             if timex_node not in all_timex_nodes:
+                
                 # Found a TIMEX that has not been seen before
                 all_timex_nodes.add(timex_node)
+                
                 timex = self._timex_from_node(timex_node)
                 all_timexes_by_id[timex.id] = timex
                 all_timexes.append(timex)
@@ -838,7 +874,7 @@ class XmlDocument(object):
 
                 # And just add it at the front
                 txsents[0][0][2].add(timex)
-
+        
         # Now resolve any dangling references
         for timex in all_timexes:
             if timex.begin_timex != None:
