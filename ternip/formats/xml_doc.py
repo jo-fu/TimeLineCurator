@@ -2,7 +2,6 @@ import xml.dom.minidom
 import logging
 
 import nltk.tag
-from nltk import pos_tag
 import nltk.tokenize
 
 from ternip.timex import add_timex_ids
@@ -803,7 +802,7 @@ class XmlDocument(object):
                 # Extract the words from the token tuples in sent
                 words = [s for (s, a) in sent]
                 # Use NLTK's POS tagger to tag the words
-                pos_tags = pos_tag(words)
+                pos_tags = nltk.tag.pos_tag(words)
                 
                 # Create a list of word-tag tuples from the POS tags
                 tagged_sent = [(t, tag) for (t, tag) in zip(words, pos_tags)]

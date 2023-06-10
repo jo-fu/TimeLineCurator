@@ -5,7 +5,6 @@ function getCirclePath(datum,beginning,scaleFactor){
     console.log("datum: "+datum.val+" beg: "+beginning+", sF: "+scaleFactor)
     }
   var cy = parseInt(getYPos(datum));
-  //console.log(datum.id + ": " +cy)
   
   if(datum.visible){ var r = itemHeight/2; }
   else{ var r = 0; }
